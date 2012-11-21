@@ -25,6 +25,7 @@ import syam.artgenerator.command.BaseCommand;
 import syam.artgenerator.command.GenerateCommand;
 import syam.artgenerator.command.HelpCommand;
 import syam.artgenerator.command.ReloadCommand;
+import syam.artgenerator.generator.ColorData;
 import syam.artgenerator.util.Metrics;
 
 /**
@@ -77,6 +78,8 @@ public class ArtGenerator extends JavaPlugin{
 
 		// コマンド登録
 		registerCommands();
+
+		ColorData.init();
 
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();

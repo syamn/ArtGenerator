@@ -7,6 +7,7 @@ package syam.artgenerator.generator;
 import java.awt.image.BufferedImage;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import syam.artgenerator.ArtGenerator;
 import syam.artgenerator.exception.StateException;
@@ -48,11 +49,12 @@ public class BuildingTask implements Runnable{
     		sendMessage("斜めには作成できません！");
     		return;
     	}
+    	plugin.debug("Using FaceDirection: " + face);
 
     	int ax = 0, ay = 0, az = 0;
     	for (int x = 0; x <= width - 1; x++){
     		for (int y = 0; y <= height - 1; y++){
-    			final BlockData block = blocks[x][y];
+    			//Block target;
     			switch (dir){
     				case UP: // 上向き
     				case DOWN: // 下向き
@@ -74,15 +76,20 @@ public class BuildingTask implements Runnable{
     					}
     					else if (face == 3){
     						ax = 0;
-    						az = -x;
+    						az = x;
     					}
-    					ay = (height - 1) - y;
+    					//ay = -y; // 左上起点
+    					ay = -y + height - 1;
     					break;
     				// 例外
     				default:
     					throw new StateException("Undefined Direction!");
     			}
-    			loc.add(ax, ay, az).getBlock().setTypeIdAndData(block.getID(), block.getData(), true);
+    			final Block targetBlock = loc.clone().add(ax, ay, az).getBlock();
+    			final BlockData block = blocks[x][y];
+    			targetBlock.setTypeId(block.getID());
+    			targetBlock.setData(block.getData());
+    			plugin.debug("put block: " + block.getID() + ":" + block.getData() + ", To: " + Actions.getBlockLocationString(targetBlock.getLocation()) + " ["+x+","+y+"]");
     		}
     	}
 
@@ -96,16 +103,16 @@ public class BuildingTask implements Runnable{
         if (rotation < 0) rotation += 360.0;
 
         if (157.5 <= rotation && rotation < 202.5){
-        	return 0;
+        	return 3;
         }
         else if (247.5 <= rotation && rotation < 292.5){
-        	return 1;
+        	return 0;
         }
         else if (337.5 <= rotation && rotation < 360.0){
-        	return 2;
+        	return 1;
         }
         else if (67.5 <= rotation && rotation < 112.5){
-        	return 3;
+        	return 2;
         }
 
         return -1;

@@ -100,15 +100,23 @@ public class GeneratorTask implements Runnable{
     	BlockData[][] blocks = new BlockData[width][height];
     	for (int x = 0; x <= img.getWidth() - 1; x++){
     		for (int y = 0; y <= img.getHeight() - 1; y++){
-    			Color closest = getClosestMatch(x, y);
+    			//Color closest = getClosestMatch(x, y);
 
-    			String[] blockStr = ColorData.getBlockStr(closest).split(":");
+    			//String[] blockStr = ColorData.getBlockStr(closest).split(":");
+    			String blockStr = getClosestMatch(x, y);
+    			String[] splitted;
+    			if (blockStr == null){
+    				splitted = new String[]{"0"};
+    			}else{
+    				splitted = blockStr.trim().split(":");
+    			}
     			final BlockData block = new BlockData(
-    					Integer.parseInt(blockStr[0]),
-    					(blockStr.length > 1) ? Byte.parseByte(blockStr[1]) : (byte) 0);
+    					Integer.parseInt(splitted[0]),
+    					(splitted.length > 1) ? Byte.parseByte(splitted[1]) : (byte) 0);
 
     			// put data
     			blocks[x][y] = block;
+    			// blocks[x][y] = new BlockData(41, (byte) 0); //debug
     		}
     	}
     	plugin.debug("Finish image convert loop");
@@ -140,28 +148,29 @@ public class GeneratorTask implements Runnable{
     }
 
     /**
-     * プラグインに登録済みの中から一番近い色を返す
+     * プラグインに登録済みの中から一番近い色のブロックを返す
      * @param x
      * @param y
      * @return
      */
-    private Color getClosestMatch(final int x, final int y){
+    private String getClosestMatch(final int x, final int y){
     	if (img == null || (img.getRGB(x, y) >> 24 & 0xFF) < 10){
     		return null;
     	}
 
     	int prevMin = 765; //255 * 3; // possibly max value
-    	Color closestColor = null;
+    	String closestColorBlock = null;
 
     	for (Color col : ColorData.getColorMap().keySet()){
     		int diff = getColorDiff(new Color(img.getRGB(x, y)), col);
     		if (diff >= prevMin) continue;
 
     		prevMin = diff;
-    		closestColor = col;
+    		closestColorBlock = ColorData.getBlockStr(col);
     	}
 
-    	return closestColor;
+    	plugin.debug("ClosestColorBlock Selected: " + closestColorBlock + ", prevMin=" + prevMin);
+    	return closestColorBlock;
     }
     /**
      * 色と色の差をintで返す
