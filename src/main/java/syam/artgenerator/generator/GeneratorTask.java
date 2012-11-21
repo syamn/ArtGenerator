@@ -99,7 +99,7 @@ public class GeneratorTask implements Runnable{
     	plugin.debug("Start image convert loop");
     	BlockData[][] blocks = new BlockData[width][height];
     	for (int x = 0; x <= img.getWidth() - 1; x++){
-    		for (int y = 0; y <= img.getHeight() -1; y++){
+    		for (int y = 0; y <= img.getHeight() - 1; y++){
     			Color closest = getClosestMatch(x, y);
 
     			String[] blockStr = ColorData.getBlockStr(closest).split(":");
@@ -114,11 +114,11 @@ public class GeneratorTask implements Runnable{
     	plugin.debug("Finish image convert loop");
 
     	// build
-    	plugin.debug("Start build blocks");
+    	BuildingTask task = new BuildingTask(plugin, senderName, senderLocation, dir);
+    	task.putBlockData(blocks, width, height);
+    	int taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 0L);
+    	plugin.debug("Started BuildingTask (TaskID:" + taskID + ")");
 
-
-
-    	plugin.debug("Finish build blocks");
     	plugin.debug("== Finish GeneratorTask ==");
     }
 
@@ -139,6 +139,12 @@ public class GeneratorTask implements Runnable{
     	return null;
     }
 
+    /**
+     * プラグインに登録済みの中から一番近い色を返す
+     * @param x
+     * @param y
+     * @return
+     */
     private Color getClosestMatch(final int x, final int y){
     	if (img == null || (img.getRGB(x, y) >> 24 & 0xFF) < 10){
     		return null;
@@ -157,7 +163,6 @@ public class GeneratorTask implements Runnable{
 
     	return closestColor;
     }
-
     /**
      * 色と色の差をintで返す
      * @param c1
@@ -172,23 +177,7 @@ public class GeneratorTask implements Runnable{
     	return diff;
     }
 
-    /**
-     * タスク実行者にメッセージを送信する
-     * @param msg
-     */
     private void sendMessage(String msg){
-    	if (msg == null) return;
-
-    	if (senderName == null){
-    		Actions.message(Bukkit.getConsoleSender(), logPrefix + msg);
-    		return;
-    	}
-
-    	final Player player = Bukkit.getPlayerExact(senderName);
-    	if (player != null && player.isOnline()){
-    		Actions.message(player, msgPrefix + msg);
-    	}else{
-    		Actions.message(Bukkit.getConsoleSender(), logPrefix + " (Offline)" + senderName + ": " + msg);
-    	}
-    }
+		Actions.sendMessage(senderName, msg);
+	}
 }

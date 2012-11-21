@@ -90,6 +90,8 @@ public class ArtGenerator extends JavaPlugin{
 	 */
 	@Override
 	public void onDisable(){
+		getServer().getScheduler().cancelTasks(this);
+
 		// メッセージ表示
 		PluginDescriptionFile pdfFile=this.getDescription();
 		log.info("["+pdfFile.getName()+"] version "+pdfFile.getVersion()+" is disabled!");

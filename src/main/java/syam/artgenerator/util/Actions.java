@@ -56,6 +56,26 @@ public class Actions {
 	}
 
 	/**
+     * タスク実行者にメッセージを送信する
+     * @param msg
+     */
+    public static void sendMessage(String senderName, String msg){
+    	if (msg == null) return;
+
+    	if (senderName == null){
+    		Actions.message(Bukkit.getConsoleSender(), logPrefix + msg);
+    		return;
+    	}
+
+    	final Player player = Bukkit.getPlayerExact(senderName);
+    	if (player != null && player.isOnline()){
+    		Actions.message(player, msgPrefix + msg);
+    	}else{
+    		Actions.message(Bukkit.getConsoleSender(), logPrefix + " (Offline)" + senderName + ": " + msg);
+    	}
+    }
+
+	/**
 	 * メッセージをブロードキャスト
 	 * @param message メッセージ
 	 */
@@ -221,4 +241,35 @@ public class Actions {
 			}
 		}
 	}
+
+	public static String getCardinalDirection(Location playerLoc){
+		double rotation = (playerLoc.getYaw() - 90) % 360;
+        if (rotation < 0) {
+            rotation += 360.0;
+        }
+         if (0 <= rotation && rotation < 22.5) {
+            return "N";
+        } else if (22.5 <= rotation && rotation < 67.5) {
+            return "NE";
+        } else if (67.5 <= rotation && rotation < 112.5) {
+            return "E";
+        } else if (112.5 <= rotation && rotation < 157.5) {
+            return "SE";
+        } else if (157.5 <= rotation && rotation < 202.5) {
+            return "S";
+        } else if (202.5 <= rotation && rotation < 247.5) {
+            return "SW";
+        } else if (247.5 <= rotation && rotation < 292.5) {
+            return "W";
+        } else if (292.5 <= rotation && rotation < 337.5) {
+            return "NW";
+        } else if (337.5 <= rotation && rotation < 360.0) {
+            return "N";
+        } else {
+            return null;
+        }
+	}
+	public static String getCardinalDirection(Player player) {
+		return getCardinalDirection(player.getLocation());
+    }
 }
