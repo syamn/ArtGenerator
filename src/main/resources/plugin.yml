@@ -10,7 +10,7 @@ author: syam
 commands:
     artgenerator:
       usage: /artgenerator - to see the help
-      aliases: [artgen, ag]
+      aliases: [artgen, ag, art]
       description: To see the ArtGenerator help.
 permissions:
     artgenerator.admin:

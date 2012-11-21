@@ -6,7 +6,9 @@ package syam.artgenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,11 +16,13 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.material.Directional;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import syam.artgenerator.command.BaseCommand;
+import syam.artgenerator.command.GenerateCommand;
 import syam.artgenerator.command.HelpCommand;
 import syam.artgenerator.command.ReloadCommand;
 import syam.artgenerator.util.Metrics;
@@ -99,7 +103,7 @@ public class ArtGenerator extends JavaPlugin{
 		commands.add(new HelpCommand());
 
 		// Main Commands
-		//commands.add(new AddCommand());
+		commands.add(new GenerateCommand());
 
 		// Admin Commands
 		commands.add(new ReloadCommand());
@@ -128,6 +132,9 @@ public class ArtGenerator extends JavaPlugin{
 				// 引数ゼロはヘルプ表示
 				args = new String[]{"help"};
 			}
+			else if (args[0].equalsIgnoreCase("gen")){
+				args[0] = "generate";
+			}
 
 			outer:
 				for (BaseCommand command : commands.toArray(new BaseCommand[0])){
@@ -140,13 +147,23 @@ public class ArtGenerator extends JavaPlugin{
 						return command.run(this, sender, args, commandLabel);
 					}
 				}
-			// 有効コマンドなし ヘルプ表示
+			// 有効コマンドなし デフォルトコマンド実行
 			new HelpCommand().run(this, sender, args, commandLabel);
 			return true;
 		}
 		return false;
 	}
 
+	private void mappingData(){
+
+	}
+
+
+
+	/**
+	 * デバッグログ
+	 * @param msg
+	 */
 	public void debug(final String msg){
 		if (config.isDebug()){
 			log.info(logPrefix+ "[DEBUG]" + msg);

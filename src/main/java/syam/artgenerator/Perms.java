@@ -13,6 +13,7 @@ import org.bukkit.permissions.Permissible;
 public enum Perms {
 	/* 権限ノード */
 	// Main Commands
+	GENERATE ("generate"),
 
 	// Admin Commands
 	RELOAD ("reload"),

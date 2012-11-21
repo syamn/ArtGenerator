@@ -38,27 +38,6 @@ public class Actions {
 
 	private final ArtGenerator plugin;
 
-	private static final List<String> colors = new ArrayList<String>(16){
-		private static final long serialVersionUID = -4095100564568189453L;
-	{
-		add("\u00A70");
-		add("\u00A71");
-		add("\u00A72");
-		add("\u00A73");
-		add("\u00A74");
-		add("\u00A75");
-		add("\u00A76");
-		add("\u00A77");
-		add("\u00A78");
-		add("\u00A79");
-		add("\u00A7a");
-		add("\u00A7b");
-		add("\u00A7c");
-		add("\u00A7d");
-		add("\u00A7e");
-		add("\u00A7f");
-	}};
-
 	public Actions(ArtGenerator plugin){
 		this.plugin = plugin;
 	}
@@ -192,47 +171,6 @@ public class Actions {
 		if (syamn.isOnline()){
 			Actions.message((Player) syamn, msg);
 		}
-	}
-	/**
-	 * 文字列の&(char)をカラーコードに変換して返す
-	 * @param string 文字列
-	 * @return 変換後の文字列
-	 */
-	public static String coloring(String string){
-		if (string == null) return null;
-		string = string.replaceAll("&([0-9a-fA-Fk-oK-OrR])", "\u00A7$1");
-
-		// don't touch above replace method. keep backward compatibility.
-		string = string.replaceAll("\u00A7K", "\u00A7k");
-
-		// (\u00A7)k roop
-		while (string.contains("\u00A7k")){
-			// without random
-			int i = string.indexOf("\u00A7k") + 2;
-			String sub = string.substring(i, string.length());
-			// end if other & is found
-			if (sub.contains("\u00A7")) sub = sub.substring(0, sub.indexOf("\u00A7"));
-			// replace
-			string = string.replace(sub, coloringRandom(sub));
-			string = string.replaceFirst("\u00A7k", "");
-		}
-
-		return string;
-	}
-	/**
-	 * 引数の文字列をランダムカラーリングして返す
-	 * @param string
-	 * @return
-	 */
-	private static String coloringRandom(String string){
-		if (string == null) return null;
-		String ret = "";
-		for (int i = 0, k = string.length(); i < k; i++){
-			int x = (int)(Math.random() * colors.size());
-			char ch = string.charAt(i);
-			ret += colors.get(x) + Character.toString(ch);
-		}
-		return ret;
 	}
 
 	/****************************************/
