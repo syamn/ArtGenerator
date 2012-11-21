@@ -1,0 +1,4 @@
+ArtGenerator
+============
+
+CraftBukkit ArtGenerator Plugin
