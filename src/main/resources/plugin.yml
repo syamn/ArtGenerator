@@ -1,0 +1,18 @@
+##  Plugin Information  ##
+name: ArtGenerator
+version: version-number-unknown
+main: syam.artgenerator.ArtGenerator
+description: ArtGenerator Plugin
+website: http://sakura-server.net/
+softdepend: [WorldEdit]
+##  Original Author     ##
+author: syam
+commands:
+    artgenerator:
+      usage: /artgenerator - to see the help
+      aliases: [artgen, ag]
+      description: To see the ArtGenerator help.
+permissions:
+    artgenerator.admin:
+        default: op
+        description: Allow use admin commands
