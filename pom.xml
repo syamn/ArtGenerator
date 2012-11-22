@@ -27,7 +27,7 @@
   <!-- License -->
   <licenses>
       <license>
-          <name>All right reserved</name>
+          <name>GNU Lesser General Public License 3.0</name>
           <url>LICENSE.txt</url>
           <distribution>repo</distribution>
       </license>
