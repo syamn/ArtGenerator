@@ -5,7 +5,6 @@
 package syam.artgenerator.generator;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 
 import syam.artgenerator.ArtGenerator;
 import syam.artgenerator.exception.StateException;
