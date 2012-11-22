@@ -50,15 +50,18 @@ public class GenerateCommand extends BaseCommand{
         }
 
         // check direction
-        Direction dir = Direction.FACE;
+        Direction dir = null;
         if (args.size() >= 2){
-            String str1 = args.get(1);
+            final String str1 = args.get(1);
             for(Direction d : Direction.values()){
                 if (d.name().equalsIgnoreCase(str1)){
                     dir = d;
                 }
             }
-            throw new CommandException(msgPrefix+ "&c無効な方向指定です！");
+            if (dir == null)
+                throw new CommandException(msgPrefix+ "&c無効な方向指定です！ (UP/DOWN)");
+        }else{
+            dir = Direction.FACE;
         }
 
         // check already running, synchronized check
