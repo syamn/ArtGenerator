@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>syam.artgenerator</groupId>
   <artifactId>ArtGenerator</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>ArtGenerator</name>
   <description>CraftBukkit ArtGenerator Plugin</description>
 
