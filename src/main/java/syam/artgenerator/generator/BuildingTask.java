@@ -56,27 +56,51 @@ public class BuildingTask implements Runnable{
     		for (int y = 0; y <= height - 1; y++){
     			//Block target;
     			switch (dir){
-    				case UP: // 上向き
-    				case DOWN: // 下向き
+    				// 上向き
+    				case UP:
+    					switch (face){
+							case 0:
+		    					ax = -x;
+		    					az = -y;
+		    					break;
+							case 1:
+	    						ax = y;
+	    						az = -x;
+	    						break;
+							case 2:
+	    						ax = x;
+	    						az = y;
+	    						break;
+							case 3:
+	    						ax = -y;
+	    						az = x;
+	    						break;
+    					}
+    					ay = 0;
+    					break;
+					// 下向き
+    				case DOWN:
     					sendMessage("現在この向きでの作成は対応していません");
     					break;
     				// プレイヤーの向き
     				case FACE:
-    					if (face == 0){
-	    					ax = -x;
-	    					az = 0;
-    					}
-    					else if (face == 1){
-    						ax = 0;
-    						az = -x;
-    					}
-    					else if (face == 2){
-    						ax = x;
-    						az = 0;
-    					}
-    					else if (face == 3){
-    						ax = 0;
-    						az = x;
+    					switch (face){
+							case 0:
+		    					ax = -x;
+		    					az = 0;
+		    					break;
+							case 1:
+	    						ax = 0;
+	    						az = -x;
+	    						break;
+							case 2:
+	    						ax = x;
+	    						az = 0;
+	    						break;
+							case 3:
+	    						ax = 0;
+	    						az = x;
+	    						break;
     					}
     					//ay = -y; // 左上起点
     					ay = -y + height - 1;
