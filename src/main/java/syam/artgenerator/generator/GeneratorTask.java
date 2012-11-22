@@ -47,7 +47,7 @@ public class GeneratorTask implements Runnable{
     public GeneratorTask(final ArtGenerator plugin, final CommandSender sender, final Direction direction){
         this.plugin = plugin;
 
-        this.senderName = (sender instanceof Player) ? sender.getName() : null;
+        this.senderName = sender.getName();
         this.senderLocation = (sender instanceof Player) ? ((Player) sender).getLocation() : null;
         this.dir = direction;
     }
@@ -64,15 +64,17 @@ public class GeneratorTask implements Runnable{
 
     @Override
     public void run(){
-        plugin.debug("== Start GeneratorTask by " + ((senderName == null) ? "Console" : senderName) + " ==");
+        plugin.debug("== Start GeneratorTask by " + senderName + " ==");
 
         if (!isURL && !isFile) {
+            Timer.removeData(senderName);
             throw new StateException("Invalid state! Not source specified!");
         }
 
         // TODO: just only support URL
         if (!isURL){
             sendMessage("Just support only URL format!");
+            Timer.removeData(senderName);
             return;
         }
 
@@ -84,6 +86,7 @@ public class GeneratorTask implements Runnable{
             if (plugin.getConfigs().isDebug()){
                 ex.printStackTrace();
             }
+            Timer.removeData(senderName);
             return;
         }
 
@@ -120,9 +123,13 @@ public class GeneratorTask implements Runnable{
         // build
         BuildingTask task = new BuildingTask(plugin, senderName, senderLocation, dir);
         task.putBlockData(blocks, width, height);
-        int taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 0L);
-        plugin.debug("Started BuildingTask (TaskID:" + taskID + ")");
 
+        synchronized (GeneratorTask.class) {
+            task.putGenTakedtime(Timer.getDiffMillis(senderName));
+            int taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 0L);
+            Timer.putTask(senderName, taskID);
+            plugin.debug("Started BuildingTask (TaskID:" + taskID + ")");
+        }
         plugin.debug("== Finish GeneratorTask ==");
     }
 

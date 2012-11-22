@@ -11,6 +11,7 @@ import syam.artgenerator.Perms;
 import syam.artgenerator.exception.CommandException;
 import syam.artgenerator.generator.Direction;
 import syam.artgenerator.generator.GeneratorTask;
+import syam.artgenerator.generator.Timer;
 import syam.artgenerator.util.Actions;
 
 /**
@@ -47,11 +48,18 @@ public class GenerateCommand extends BaseCommand{
             throw new CommandException(msgPrefix+ "&c無効な方向指定です！");
         }
 
-        final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
-        task.setSource(url);
-        int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
+        // check already running, synchronized check
+        synchronized (GenerateCommand.class){
+            if (Timer.isRunning(sender.getName())){
+                throw new CommandException(msgPrefix+ "&c既に生成タスクを実行中です！");
+            }
+            final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
+            task.setSource(url);
+            final int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
+            Timer.putTask(sender.getName(), taskID);
+        }
 
-        Actions.message(sender, msgPrefix + "&cドットアートの生成を開始しました..");
+        Actions.message(sender, msgPrefix + "&aドットアートの生成を開始しました..");
     }
 
     @Override

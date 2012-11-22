@@ -5,6 +5,7 @@
 package syam.artgenerator.command;
 
 import syam.artgenerator.Perms;
+import syam.artgenerator.generator.Timer;
 import syam.artgenerator.util.Actions;
 
 /**
@@ -21,6 +22,9 @@ public class ReloadCommand extends BaseCommand{
 
     @Override
     public void execute() {
+        Timer.stopAll();
+        plugin.getServer().getScheduler().cancelTasks(plugin);
+
         try{
             plugin.getConfigs().loadConfig(false);
         }catch (Exception ex){

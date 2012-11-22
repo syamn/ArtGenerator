@@ -20,6 +20,7 @@ import syam.artgenerator.command.GenerateCommand;
 import syam.artgenerator.command.HelpCommand;
 import syam.artgenerator.command.ReloadCommand;
 import syam.artgenerator.generator.ColorData;
+import syam.artgenerator.generator.Timer;
 import syam.artgenerator.util.Metrics;
 
 /**
@@ -87,6 +88,7 @@ public class ArtGenerator extends JavaPlugin{
      */
     @Override
     public void onDisable(){
+        Timer.stopAll();
         getServer().getScheduler().cancelTasks(this);
 
         // メッセージ表示

@@ -24,6 +24,8 @@ public class BuildingTask implements Runnable{
     private BlockData[][] blocks;
     private int width, height;
 
+    private long generator_Taked = 0;
+
     public BuildingTask(final ArtGenerator plugin, final String senderName, final Location playerLocation, final Direction dir){
         this.plugin = plugin;
 
@@ -45,6 +47,7 @@ public class BuildingTask implements Runnable{
         final int face = getPlayerDirection();
         if (face == -1){
             sendMessage("&c斜めには作成できません！");
+            Timer.removeData(senderName);
             return;
         }
         plugin.debug("Using FaceDirection: " + face);
@@ -83,7 +86,9 @@ public class BuildingTask implements Runnable{
                         //ay = -y; // 左上起点
                         ay = -y + height - 1;
                         break;
-                    default: throw new StateException("Undefined Direction!");
+                    default:
+                        Timer.removeData(senderName);
+                        throw new StateException("Undefined Direction!");
                 }
                 //target = loc.clone().add(ax, ay, az).getBlock();
                 putData = blocks[x][y];
@@ -93,9 +98,13 @@ public class BuildingTask implements Runnable{
                 //plugin.debug("put block: " + block.getID() + ":" + block.getData() + ", To: " + Actions.getBlockLocationString(target.getLocation()) + " ["+x+","+y+"]");
             }
         }
+        plugin.debug("== Finish BuildingTask ==");
+
+        long building_Taked = Timer.getDiffMillis(senderName);
+        long total_Taked = this.generator_Taked + building_Taked;
 
         sendMessage("&a" + width + "x" + height + "のドットアートを作成しました！");
-        plugin.debug("== Finish BuildingTask ==");
+        sendMessage("&7Total " + total_Taked + "ms (background " + generator_Taked + "ms + building &c" + building_Taked + "ms&7)");
     }
 
     private int getPlayerDirection(){
@@ -121,5 +130,9 @@ public class BuildingTask implements Runnable{
 
     private void sendMessage(String msg){
         Actions.sendMessage(senderName, msg);
+    }
+
+    public void putGenTakedtime(final long taked){
+        this.generator_Taked = taked;
     }
 }
