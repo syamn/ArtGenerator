@@ -4,6 +4,7 @@
  */
 package syam.artgenerator.command;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,17 +24,29 @@ public class GenerateCommand extends BaseCommand{
         bePlayer = true;
         name = "generate";
         argLength = 1;
-        usage = "<URL,file> (up/down) <- generate dot art";
+        usage = "<URL,FileName> (up/down) <- generate dot art";
     }
 
     @Override
     public void execute() throws CommandException {
-        // check source
+        // check source: URL
         URL url = null;
         try{
             url = new URL(args.get(0));
         }catch(MalformedURLException ex){
-            throw new CommandException(msgPrefix+ "&cURLが無効です！");
+            // through this exception
+        }
+
+        // check source: File
+        File file = null;
+        if (url == null){
+            file = new File(plugin.getDataFolder().getPath() + System.getProperty("file.separator") + "image", args.get(0));
+            if (!file.exists()){
+                throw new CommandException(msgPrefix+ "&cファイルが見つかりません！ " + file.getPath());
+            }
+            if (!file.canRead()){
+                throw new CommandException(msgPrefix+ "&cファイルが読み込めません！ " + file.getPath());
+            }
         }
 
         // check direction
@@ -54,7 +67,8 @@ public class GenerateCommand extends BaseCommand{
                 throw new CommandException(msgPrefix+ "&c既に生成タスクを実行中です！");
             }
             final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
-            task.setSource(url);
+            if (url != null) task.setSource(url);
+            else task.setSource(file);
             final int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
             Timer.putTask(sender.getName(), taskID);
         }

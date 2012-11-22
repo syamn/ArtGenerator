@@ -44,6 +44,7 @@ public class ConfigurationManager {
     public void loadConfig(final boolean initialLoad) throws Exception{
         // create directories
         FileStructure.createDir(pluginDir);
+        FileStructure.createDir(new File(pluginDir, "image"));
 
         // get config.yml path
         File file = new File(pluginDir, "config.yml");

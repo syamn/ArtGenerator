@@ -53,10 +53,12 @@ public class GeneratorTask implements Runnable{
     }
 
     public void setSource(final URL url){
+        if (url == null) return;
         this.isURL = true;
         this.url = url;
     }
     public void setSource(final File file){
+        if (file == null) return;
         this.isFile = true;
         this.file = file;
     }
@@ -65,18 +67,6 @@ public class GeneratorTask implements Runnable{
     @Override
     public void run(){
         plugin.debug("== Start GeneratorTask by " + senderName + " ==");
-
-        if (!isURL && !isFile) {
-            Timer.removeData(senderName);
-            throw new StateException("Invalid state! Not source specified!");
-        }
-
-        // TODO: just only support URL
-        if (!isURL){
-            sendMessage("Just support only URL format!");
-            Timer.removeData(senderName);
-            return;
-        }
 
         // get image
         try{
@@ -147,6 +137,7 @@ public class GeneratorTask implements Runnable{
             plugin.debug("Getting image from file: " + file.getPath());
             return ImageIO.read(file);
         }
+        plugin.debug("returned null source!");
         return null;
     }
 
