@@ -49,7 +49,7 @@ public class Timer {
             ArtGenerator.getInstance().getServer().getScheduler().cancelTask(taskMap.remove(name));
             Player player = Bukkit.getPlayerExact(name);
             if (player != null && player.isOnline()){
-                Actions.message(player, ArtGenerator.msgPrefix+ "あなたの作成タスクはキャンセルされました");
+                Actions.message(player, ArtGenerator.msgPrefix+ "&cあなたの作成タスクはキャンセルされました");
             }
         }
 
