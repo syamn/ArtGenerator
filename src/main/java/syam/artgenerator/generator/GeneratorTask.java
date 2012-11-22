@@ -80,7 +80,7 @@ public class GeneratorTask implements Runnable{
         try{
             img = getImage();
         }catch (IOException ex){
-            sendMessage("Could not read source image!");
+            sendMessage("&c画像ファイルの読み込みに失敗しました！");
             if (plugin.getConfigs().isDebug()){
                 ex.printStackTrace();
             }
@@ -113,7 +113,6 @@ public class GeneratorTask implements Runnable{
 
                 // put data
                 blocks[x][y] = block;
-                // blocks[x][y] = new BlockData(41, (byte) 0); //debug
             }
         }
         plugin.debug("Finish image convert loop");

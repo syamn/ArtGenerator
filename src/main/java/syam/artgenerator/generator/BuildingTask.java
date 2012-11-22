@@ -44,88 +44,53 @@ public class BuildingTask implements Runnable{
 
         final int face = getPlayerDirection();
         if (face == -1){
-            sendMessage("斜めには作成できません！");
+            sendMessage("&c斜めには作成できません！");
             return;
         }
         plugin.debug("Using FaceDirection: " + face);
 
         int ax = 0, ay = 0, az = 0;
+        BlockData putData;
         for (int x = 0; x <= width - 1; x++){
             for (int y = 0; y <= height - 1; y++){
+                // first, set image-x to add variable block-x
+                if (face == 0) ax = -x;
+                else if (face == 1) az = -x;
+                else if (face == 2) ax = x;
+                else if (face == 3) az = x;
+
+                // next, switch generate direction
                 switch (dir){
                     case UP: // up side
-                        switch (face){
-                            case 0:
-                                ax = -x;
-                                az = -y;
-                                break;
-                            case 1:
-                                ax = y;
-                                az = -x;
-                                break;
-                            case 2:
-                                ax = x;
-                                az = y;
-                                break;
-                            case 3:
-                                ax = -y;
-                                az = x;
-                                break;
-                        }
+                        if (face == 0) az = -y;
+                        else if (face == 1) ax = y;
+                        else if (face == 2) az = y;
+                        else if (face == 3) ax = -y;
                         ay = 0;
                         break;
 
                     case DOWN: // down side
-                        switch (face){
-                            case 0:
-                                ax = -x;
-                                az = y;
-                                break;
-                            case 1:
-                                ax = -y;
-                                az = -x;
-                                break;
-                            case 2:
-                                ax = x;
-                                az = -y;
-                                break;
-                            case 3:
-                                ax = y;
-                                az = x;
-                                break;
-                        }
+                        if (face == 0) az = y;
+                        else if (face == 1) ax = -y;
+                        else if (face == 2) az = -y;
+                        else if (face == 3) ax = y;
                         ay = 0;
                         break;
 
                     case FACE: // player's face side
-                        switch (face){
-                            case 0:
-                                ax = -x;
-                                az = 0;
-                                break;
-                            case 1:
-                                ax = 0;
-                                az = -x;
-                                break;
-                            case 2:
-                                ax = x;
-                                az = 0;
-                                break;
-                            case 3:
-                                ax = 0;
-                                az = x;
-                                break;
-                        }
+                        if (face == 0 || face == 2) az = 0;
+                        else if (face == 1 || face == 3) ax = 0;
                         //ay = -y; // 左上起点
                         ay = -y + height - 1;
                         break;
                     default: throw new StateException("Undefined Direction!");
                 }
-                final Block targetBlock = loc.clone().add(ax, ay, az).getBlock();
-                final BlockData block = blocks[x][y];
-                targetBlock.setTypeId(block.getID());
-                targetBlock.setData(block.getData());
-                plugin.debug("put block: " + block.getID() + ":" + block.getData() + ", To: " + Actions.getBlockLocationString(targetBlock.getLocation()) + " ["+x+","+y+"]");
+                //target = loc.clone().add(ax, ay, az).getBlock();
+                putData = blocks[x][y];
+                loc.clone().add(ax, ay, az).getBlock().setTypeIdAndData(putData.getID(), putData.getData(), true);
+                //target.setTypeId(block.getID());
+                //target.setData(block.getData());
+                //plugin.debug("put block: " + block.getID() + ":" + block.getData() + ", To: " + Actions.getBlockLocationString(target.getLocation()) + " ["+x+","+y+"]");
             }
         }
 

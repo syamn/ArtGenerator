@@ -32,7 +32,7 @@ public class GenerateCommand extends BaseCommand{
         try{
             url = new URL(args.get(0));
         }catch(MalformedURLException ex){
-            throw new CommandException(logPrefix+ "Invalid URL!");
+            throw new CommandException(msgPrefix+ "&cURLが無効です！");
         }
 
         // check direction
@@ -44,13 +44,14 @@ public class GenerateCommand extends BaseCommand{
                     dir = d;
                 }
             }
+            throw new CommandException(msgPrefix+ "&c無効な方向指定です！");
         }
 
         final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
         task.setSource(url);
         int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
 
-        Actions.message(sender, msgPrefix + "ドットアートの生成を開始しました..");
+        Actions.message(sender, msgPrefix + "&cドットアートの生成を開始しました..");
     }
 
     @Override
