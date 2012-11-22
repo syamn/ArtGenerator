@@ -45,7 +45,7 @@ public class BuildingTask implements Runnable{
 
         final int face = getPlayerDirection();
         if (face == -1){
-            sendMessage("&c斜めには作成できません！");
+            sendMessage("&cInvalid face Direction!");
             Timer.removeData(senderName);
             return;
         }
@@ -87,7 +87,7 @@ public class BuildingTask implements Runnable{
                         break;
                     default:
                         Timer.removeData(senderName);
-                        throw new StateException("Undefined Direction!");
+                        throw new StateException("Undefined Direction! Please report this!");
                 }
                 //target = loc.clone().add(ax, ay, az).getBlock();
                 putData = blocks[x][y];
@@ -102,7 +102,7 @@ public class BuildingTask implements Runnable{
         long building_Taked = Timer.getDiffMillis(senderName);
         long total_Taked = this.generator_Taked + building_Taked;
 
-        sendMessage("&a" + width + "x" + height + "のドットアートを作成しました！");
+        sendMessage("&aGenerated " + width + "x" + height + " block art!");
         sendMessage("&7Total " + total_Taked + "ms (background " + generator_Taked + "ms + building &c" + building_Taked + "ms&7)");
     }
 

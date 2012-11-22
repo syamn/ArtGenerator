@@ -155,12 +155,6 @@ public class ArtGenerator extends JavaPlugin{
         return false;
     }
 
-    private void mappingData(){
-
-    }
-
-
-
     /**
      * デバッグログ
      * @param msg

@@ -42,10 +42,10 @@ public class GenerateCommand extends BaseCommand{
         if (url == null){
             file = new File(plugin.getDataFolder().getPath() + System.getProperty("file.separator") + "image", args.get(0));
             if (!file.exists()){
-                throw new CommandException(msgPrefix+ "&cファイルが見つかりません！ " + file.getPath());
+                throw new CommandException(msgPrefix+ "&cFile not found! " + file.getPath());
             }
             if (!file.canRead()){
-                throw new CommandException(msgPrefix+ "&cファイルが読み込めません！ " + file.getPath());
+                throw new CommandException(msgPrefix+ "&cCould not read the file! " + file.getPath());
             }
         }
 
@@ -59,7 +59,7 @@ public class GenerateCommand extends BaseCommand{
                 }
             }
             if (dir == null)
-                throw new CommandException(msgPrefix+ "&c無効な方向指定です！ (UP/DOWN)");
+                throw new CommandException(msgPrefix+ "&cInvalid direction parameter (UP/DOWN): " + str1);
         }else{
             dir = Direction.FACE;
         }
@@ -67,7 +67,7 @@ public class GenerateCommand extends BaseCommand{
         // check already running, synchronized check
         synchronized (GenerateCommand.class){
             if (Timer.isRunning(sender.getName())){
-                throw new CommandException(msgPrefix+ "&c既に生成タスクを実行中です！");
+                throw new CommandException(msgPrefix+ "&cYou are already running generator task!");
             }
             final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
             if (url != null) task.setSource(url);
@@ -76,7 +76,7 @@ public class GenerateCommand extends BaseCommand{
             Timer.putTask(sender.getName(), taskID);
         }
 
-        Actions.message(sender, msgPrefix + "&aドットアートの生成を開始しました..");
+        Actions.message(sender, msgPrefix + "&aStarted to generate image..");
     }
 
     @Override

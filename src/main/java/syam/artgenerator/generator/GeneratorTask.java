@@ -72,7 +72,7 @@ public class GeneratorTask implements Runnable{
         try{
             img = getImage();
         }catch (IOException ex){
-            sendMessage("&c画像ファイルの読み込みに失敗しました！");
+            sendMessage("&cFailed to read source image!");
             if (plugin.getConfigs().isDebug()){
                 ex.printStackTrace();
             }
