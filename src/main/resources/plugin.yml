@@ -4,7 +4,6 @@ version: version-number-unknown
 main: syam.artgenerator.ArtGenerator
 description: ArtGenerator Plugin
 website: http://sakura-server.net/
-softdepend: [WorldEdit]
 ##  Original Author     ##
 author: syam
 commands:
