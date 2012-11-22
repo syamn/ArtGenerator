@@ -110,9 +110,6 @@ public class BuildingTask implements Runnable{
         if (loc == null) return -1;
         double rotation = (loc.getYaw() - 90) % 360;
         if (rotation < 0) rotation += 360.0;
-
-        sendMessage(" *** DEBUG: " + rotation);
-
         // valid 0 - 360 rotate
 
         if (240 <= rotation && rotation <= 300){ // 270: 240 - 300
