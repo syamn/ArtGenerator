@@ -54,10 +54,8 @@ public class BuildingTask implements Runnable{
     	int ax = 0, ay = 0, az = 0;
     	for (int x = 0; x <= width - 1; x++){
     		for (int y = 0; y <= height - 1; y++){
-    			//Block target;
     			switch (dir){
-    				// 上向き
-    				case UP:
+    				case UP: // up side
     					switch (face){
 							case 0:
 		    					ax = -x;
@@ -78,12 +76,30 @@ public class BuildingTask implements Runnable{
     					}
     					ay = 0;
     					break;
-					// 下向き
-    				case DOWN:
-    					sendMessage("現在この向きでの作成は対応していません");
+
+    				case DOWN: // down side
+    					switch (face){
+							case 0:
+		    					ax = -x;
+		    					az = y;
+		    					break;
+							case 1:
+	    						ax = -y;
+	    						az = -x;
+	    						break;
+							case 2:
+	    						ax = x;
+	    						az = -y;
+	    						break;
+							case 3:
+	    						ax = y;
+	    						az = x;
+	    						break;
+    					}
+    					ay = 0;
     					break;
-    				// プレイヤーの向き
-    				case FACE:
+
+    				case FACE: // player's face side
     					switch (face){
 							case 0:
 		    					ax = -x;
@@ -105,9 +121,7 @@ public class BuildingTask implements Runnable{
     					//ay = -y; // 左上起点
     					ay = -y + height - 1;
     					break;
-    				// 例外
-    				default:
-    					throw new StateException("Undefined Direction!");
+    				default: throw new StateException("Undefined Direction!");
     			}
     			final Block targetBlock = loc.clone().add(ax, ay, az).getBlock();
     			final BlockData block = blocks[x][y];
