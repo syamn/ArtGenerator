@@ -9,13 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +26,7 @@ import syam.artgenerator.util.Actions;
  * @author syam(syamn)
  */
 public class GeneratorTask implements Runnable{
-	// Logger
+    // Logger
     private static final Logger log = ArtGenerator.log;
     private static final String logPrefix = ArtGenerator.logPrefix;
     private static final String msgPrefix = ArtGenerator.msgPrefix;
@@ -48,86 +45,86 @@ public class GeneratorTask implements Runnable{
     BufferedImage img = null;
 
     public GeneratorTask(final ArtGenerator plugin, final CommandSender sender, final Direction direction){
-    	this.plugin = plugin;
+        this.plugin = plugin;
 
-    	this.senderName = (sender instanceof Player) ? sender.getName() : null;
-    	this.senderLocation = (sender instanceof Player) ? ((Player) sender).getLocation() : null;
-    	this.dir = direction;
+        this.senderName = (sender instanceof Player) ? sender.getName() : null;
+        this.senderLocation = (sender instanceof Player) ? ((Player) sender).getLocation() : null;
+        this.dir = direction;
     }
 
     public void setSource(final URL url){
-    	this.isURL = true;
-    	this.url = url;
+        this.isURL = true;
+        this.url = url;
     }
     public void setSource(final File file){
-    	this.isFile = true;
-    	this.file = file;
+        this.isFile = true;
+        this.file = file;
     }
 
 
     @Override
     public void run(){
-    	plugin.debug("== Start GeneratorTask by " + ((senderName == null) ? "Console" : senderName) + " ==");
+        plugin.debug("== Start GeneratorTask by " + ((senderName == null) ? "Console" : senderName) + " ==");
 
-    	if (!isURL && !isFile) {
-    		throw new StateException("Invalid state! Not source specified!");
-    	}
+        if (!isURL && !isFile) {
+            throw new StateException("Invalid state! Not source specified!");
+        }
 
-    	// TODO: just only support URL
-    	if (!isURL){
-    		sendMessage("Just support only URL format!");
-    		return;
-    	}
+        // TODO: just only support URL
+        if (!isURL){
+            sendMessage("Just support only URL format!");
+            return;
+        }
 
-    	// get image
-    	try{
-    		img = getImage();
-    	}catch (IOException ex){
-    		sendMessage("Could not read source image!");
-    		if (plugin.getConfigs().isDebug()){
-    			ex.printStackTrace();
-    		}
-    		return;
-    	}
+        // get image
+        try{
+            img = getImage();
+        }catch (IOException ex){
+            sendMessage("Could not read source image!");
+            if (plugin.getConfigs().isDebug()){
+                ex.printStackTrace();
+            }
+            return;
+        }
 
-    	final int width = img.getWidth();
-    	final int height = img.getHeight();
+        final int width = img.getWidth();
+        final int height = img.getHeight();
 
-    	plugin.debug("Finish read the source image: width=" + width + ", height=" + height);
+        plugin.debug("Finish read the source image: width=" + width + ", height=" + height);
 
-    	// loop image bits
-    	plugin.debug("Start image convert loop");
-    	BlockData[][] blocks = new BlockData[width][height];
-    	for (int x = 0; x <= img.getWidth() - 1; x++){
-    		for (int y = 0; y <= img.getHeight() - 1; y++){
-    			//Color closest = getClosestMatch(x, y);
+        // loop image bits
+        plugin.debug("Start image convert loop");
+        BlockData[][] blocks = new BlockData[width][height];
+        for (int x = 0; x <= img.getWidth() - 1; x++){
+            for (int y = 0; y <= img.getHeight() - 1; y++){
+                //Color closest = getClosestMatch(x, y);
 
-    			//String[] blockStr = ColorData.getBlockStr(closest).split(":");
-    			String blockStr = getClosestMatch(x, y);
-    			String[] splitted;
-    			if (blockStr == null){
-    				splitted = new String[]{"0"};
-    			}else{
-    				splitted = blockStr.trim().split(":");
-    			}
-    			final BlockData block = new BlockData(
-    					Integer.parseInt(splitted[0]),
-    					(splitted.length > 1) ? Byte.parseByte(splitted[1]) : (byte) 0);
+                //String[] blockStr = ColorData.getBlockStr(closest).split(":");
+                String blockStr = getClosestMatch(x, y);
+                String[] splitted;
+                if (blockStr == null){
+                    splitted = new String[]{"0"};
+                }else{
+                    splitted = blockStr.trim().split(":");
+                }
+                final BlockData block = new BlockData(
+                        Integer.parseInt(splitted[0]),
+                        (splitted.length > 1) ? Byte.parseByte(splitted[1]) : (byte) 0);
 
-    			// put data
-    			blocks[x][y] = block;
-    			// blocks[x][y] = new BlockData(41, (byte) 0); //debug
-    		}
-    	}
-    	plugin.debug("Finish image convert loop");
+                // put data
+                blocks[x][y] = block;
+                // blocks[x][y] = new BlockData(41, (byte) 0); //debug
+            }
+        }
+        plugin.debug("Finish image convert loop");
 
-    	// build
-    	BuildingTask task = new BuildingTask(plugin, senderName, senderLocation, dir);
-    	task.putBlockData(blocks, width, height);
-    	int taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 0L);
-    	plugin.debug("Started BuildingTask (TaskID:" + taskID + ")");
+        // build
+        BuildingTask task = new BuildingTask(plugin, senderName, senderLocation, dir);
+        task.putBlockData(blocks, width, height);
+        int taskID = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 0L);
+        plugin.debug("Started BuildingTask (TaskID:" + taskID + ")");
 
-    	plugin.debug("== Finish GeneratorTask ==");
+        plugin.debug("== Finish GeneratorTask ==");
     }
 
     /**
@@ -136,15 +133,15 @@ public class GeneratorTask implements Runnable{
      * @throws IOException
      */
     private BufferedImage getImage() throws IOException{
-    	if (isURL){
-    		plugin.debug("Getting image from uri: " + url.getPath());
-    		return ImageIO.read(url);
-    	}
-    	else if (isFile){
-    		plugin.debug("Getting image from file: " + file.getPath());
-    		return ImageIO.read(file);
-    	}
-    	return null;
+        if (isURL){
+            plugin.debug("Getting image from uri: " + url.getPath());
+            return ImageIO.read(url);
+        }
+        else if (isFile){
+            plugin.debug("Getting image from file: " + file.getPath());
+            return ImageIO.read(file);
+        }
+        return null;
     }
 
     /**
@@ -154,23 +151,23 @@ public class GeneratorTask implements Runnable{
      * @return
      */
     private String getClosestMatch(final int x, final int y){
-    	if (img == null || (img.getRGB(x, y) >> 24 & 0xFF) < 10){
-    		return null;
-    	}
+        if (img == null || (img.getRGB(x, y) >> 24 & 0xFF) < 10){
+            return null;
+        }
 
-    	int prevMin = 765; //255 * 3; // possibly max value
-    	String closestColorBlock = null;
+        int prevMin = 765; //255 * 3; // possibly max value
+        String closestColorBlock = null;
 
-    	for (Color col : ColorData.getColorMap().keySet()){
-    		int diff = getColorDiff(new Color(img.getRGB(x, y)), col);
-    		if (diff >= prevMin) continue;
+        for (Color col : ColorData.getColorMap().keySet()){
+            int diff = getColorDiff(new Color(img.getRGB(x, y)), col);
+            if (diff >= prevMin) continue;
 
-    		prevMin = diff;
-    		closestColorBlock = ColorData.getBlockStr(col);
-    	}
+            prevMin = diff;
+            closestColorBlock = ColorData.getBlockStr(col);
+        }
 
-    	plugin.debug("ClosestColorBlock Selected: " + closestColorBlock + ", prevMin=" + prevMin);
-    	return closestColorBlock;
+        plugin.debug("ClosestColorBlock Selected: " + closestColorBlock + ", prevMin=" + prevMin);
+        return closestColorBlock;
     }
     /**
      * 色と色の差をintで返す
@@ -179,14 +176,14 @@ public class GeneratorTask implements Runnable{
      * @return
      */
     private int getColorDiff(final Color c1, final Color c2){
-    	int diff = 0;
-    	diff += Math.abs(c1.getRed() - c2.getRed());
-    	diff += Math.abs(c1.getGreen() - c2.getGreen());
-    	diff += Math.abs(c1.getBlue() - c2.getBlue());
-    	return diff;
+        int diff = 0;
+        diff += Math.abs(c1.getRed() - c2.getRed());
+        diff += Math.abs(c1.getGreen() - c2.getGreen());
+        diff += Math.abs(c1.getBlue() - c2.getBlue());
+        return diff;
     }
 
     private void sendMessage(String msg){
-		Actions.sendMessage(senderName, msg);
-	}
+        Actions.sendMessage(senderName, msg);
+    }
 }

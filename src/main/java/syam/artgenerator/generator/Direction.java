@@ -9,7 +9,7 @@ package syam.artgenerator.generator;
  * @author syam(syamn)
  */
 public enum Direction {
-	FACE,
-	UP,
-	DOWN,
+    FACE,
+    UP,
+    DOWN,
 }

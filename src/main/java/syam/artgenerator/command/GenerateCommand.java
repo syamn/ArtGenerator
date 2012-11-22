@@ -18,43 +18,43 @@ import syam.artgenerator.util.Actions;
  * @author syam(syamn)
  */
 public class GenerateCommand extends BaseCommand{
-	public GenerateCommand(){
-		bePlayer = true;
-		name = "generate";
-		argLength = 1;
-		usage = "<URL,file> (up/down) <- generate dot art";
-	}
+    public GenerateCommand(){
+        bePlayer = true;
+        name = "generate";
+        argLength = 1;
+        usage = "<URL,file> (up/down) <- generate dot art";
+    }
 
-	@Override
-	public void execute() throws CommandException {
-		// check source
-		URL url = null;
-		try{
-			url = new URL(args.get(0));
-		}catch(MalformedURLException ex){
-			throw new CommandException(logPrefix+ "Invalid URL!");
-		}
+    @Override
+    public void execute() throws CommandException {
+        // check source
+        URL url = null;
+        try{
+            url = new URL(args.get(0));
+        }catch(MalformedURLException ex){
+            throw new CommandException(logPrefix+ "Invalid URL!");
+        }
 
-		// check direction
-		Direction dir = Direction.FACE;
-		if (args.size() >= 2){
-			String str1 = args.get(1);
-			for(Direction d : Direction.values()){
-				if (d.name().equalsIgnoreCase(str1)){
-					dir = d;
-				}
-			}
-		}
+        // check direction
+        Direction dir = Direction.FACE;
+        if (args.size() >= 2){
+            String str1 = args.get(1);
+            for(Direction d : Direction.values()){
+                if (d.name().equalsIgnoreCase(str1)){
+                    dir = d;
+                }
+            }
+        }
 
-		final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
-		task.setSource(url);
-		int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
+        final GeneratorTask task = new GeneratorTask(plugin, sender, dir);
+        task.setSource(url);
+        int taskID = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, task, 0L);
 
-		Actions.message(sender, msgPrefix + "ドットアートの生成を開始しました..");
-	}
+        Actions.message(sender, msgPrefix + "ドットアートの生成を開始しました..");
+    }
 
-	@Override
-	public boolean permission() {
-		return Perms.GENERATE.has(sender);
-	}
+    @Override
+    public boolean permission() {
+        return Perms.GENERATE.has(sender);
+    }
 }

@@ -25,7 +25,7 @@ import syam.artgenerator.ArtGenerator;
  * @author syam(syamn)
  */
 public class FileStructure {
-	// Logger
+    // Logger
     private static final Logger log = ArtGenerator.log;
     private static final String logPrefix = ArtGenerator.logPrefix;
     private static final String msgPrefix = ArtGenerator.msgPrefix;
